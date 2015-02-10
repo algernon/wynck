@@ -36,7 +36,7 @@
              [accessor (HySymbol (+ ".get_" x))]]
          `(defn-alias [~unicode-name ~ascii-name] [~g!o ~g!v]
             (project [~g!o]
-                     (≡ (~accessor ~g!o) ~g!v))))
+                     (== (~accessor ~g!o) ~g!v))))
        [x properties]))))
 
 ;;
