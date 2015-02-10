@@ -1,19 +1,39 @@
 (import [wnck]
         [re]
-        [adderall.dsl [*]])
+        [adderall.dsl [*]]
+        [hy [HySymbol HyExpression]])
 (require adderall.dsl)
 
 ;;
 ;; Helpers
 ;;
 
-(defmacro/g! defmatch [names extractor]
-  `(defn-alias ~names [~g!w ~g!r]
-     (project [~g!w]
-              (if (.match (re.compile ~g!r)
-                          (~extractor ~g!w))
-                #ss
-                #uu))))
+(defmacro/g! defmatchers [prefix properties]
+  (HyExpression
+   (+ ['do]
+      (list-comp
+       (let [[unicode-name (HySymbol (+ prefix "/" x "ᵒ"))]
+             [ascii-name (HySymbol (+ prefix "/" x "o"))]
+             [accessor (HySymbol (+ ".get_" x))]]
+         `(defn-alias [~unicode-name ~ascii-name] [~g!o ~g!r]
+            (project [~g!o]
+                     (if (.match (re.compile ~g!r)
+                                 (~accessor ~g!o))
+                       #ss
+                       #uu))))
+       [x properties]))))
+
+(defmacro/g! defaccessors [prefix properties]
+  (HyExpression
+   (+ ['do]
+      (list-comp
+       (let [[unicode-name (HySymbol (+ prefix "/" x "ᵒ"))]
+             [ascii-name (HySymbol (+ prefix "/" x "o"))]
+             [accessor (HySymbol (+ ".get_" x))]]
+         `(defn-alias [~unicode-name ~ascii-name] [~g!o ~g!v]
+            (project [~g!o]
+                     (≡ (~accessor ~g!o) ~g!v))))
+       [x properties]))))
 
 ;;
 ;; Workspaces
@@ -22,12 +42,9 @@
 (defn-alias [workspaceᵒ workspaceo] [w]
   (memberᵒ w (.get-workspaces (wnck.screen-get-default))))
 
-(defn-alias [workspace/numberᵒ workspace/numbero] [wspc n]
-  (project [wspc]
-           (≡ (.get-number wspc) n)))
+(defaccessors workspace [number])
 
-(defmatch [workspace/nameᵒ workspace/nameo]
-  .get-name)
+(defmatchers workspace [name])
 
 ;;
 ;; Windows
@@ -46,27 +63,14 @@
                   (.move-to-workspace w ws)
                   (succeed s)))))))
 
-(defmatch [window/applicationᵒ window/applicationo]
-  .get-application)
+(defmatchers window [name])
 
-(defmatch [window/class-groupᵒ window/class-groupo]
-  .get-class-group)
-
-(defmatch [window/nameᵒ window/nameo]
-  .get-name)
-
-(defmatch [window/group-leaderᵒ window/group-leadero]
-  .get-group-leader)
-
-(defmatch [window/xidᵒ window/xido]
-  .get-xid)
+(defaccessors window [application class-group group-leader xid])
 
 ;;
 ;; Applications
 ;;
 
-(defmatch [application/nameᵒ application/nameo]
-  .get-name)
+(defmatchers application [name])
 
-(defmatch [application/windowsᵒ application/windowso]
-  .get-windows)
+(defaccessors application [windows])
