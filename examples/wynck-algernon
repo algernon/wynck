@@ -1,0 +1,20 @@
+#! /usr/bin/env hy
+;; -*- mode: hy -*-
+;;
+;; This is the layout I use...
+;;
+(import [wynck.dsl [*]]
+        [wynck.app [*]])
+(require wynck.app)
+(require wynck.dsl)
+
+(defn-alias [a/appᵒ] [w r]
+  (prep
+   (window/applicationᵒ w ?app)
+   (application/nameᵒ ?app ?app-name)
+   (== ?app-name r)))
+
+(wynck nil
+       (condᵉ
+        [(a/appᵒ window "evolution")
+         (window/positionᵒ window [0 0])]))
