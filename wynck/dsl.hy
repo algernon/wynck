@@ -67,6 +67,41 @@
                   (.move-to-workspace w ws)
                   (succeed s)))))))
 
+(defn-alias [window/geometryᵒ window/geometryo] [win geom]
+  (project [win]
+           (fn [s]
+             (let [[rgeom (reify geom s)]]
+               (if (lvar? rgeom)
+                 ((== (.get-geometry win) geom) s)
+                 (let [[[x y w h] rgeom]]
+                   (.set-geometry win
+                                  wnck.WINDOW_GRAVITY_STATIC
+                                  (| wnck.WINDOW_CHANGE_Y
+                                     wnck.WINDOW_CHANGE_X
+                                     wnck.WINDOW_CHANGE_WIDTH
+                                     wnck.WINDOW_CHANGE_HEIGHT)
+                                  x y w h)
+                   (succeed s)))))))
+
+(defn-alias [window/positionᵒ window/positiono] [win pos]
+  (project [win]
+           (fn [s]
+             (let [[rpos (reify pos s)]]
+               (if (lvar? rpos)
+                 ((fresh [geom f r s]
+                         (== (.get-geometry win) geom)
+                         (firsto geom f)
+                         (resto geom r)
+                         (firsto r s)
+                         (== pos [f s])) s)
+                 (let [[[x y] rpos]]
+                   (.set-geometry win
+                                  wnck.WINDOW_GRAVITY_STATIC
+                                  (| wnck.WINDOW_CHANGE_Y
+                                  wnck.WINDOW_CHANGE_X)
+                                  x y 0 0)
+                   (succeed s)))))))
+
 (defmatchers window [name])
 
 (defaccessors window [application class-group group-leader xid])
