@@ -7,12 +7,11 @@
 ;; Helpers
 ;;
 
-(defmacro/g! defmatch [names step-1 step-2]
+(defmacro/g! defmatch [names extractor]
   `(defn-alias ~names [~g!w ~g!r]
      (project [~g!w]
               (if (.match (re.compile ~g!r)
-                          (-> (~step-1 ~g!w)
-                              ~step-2))
+                          (~extractor ~g!w))
                 #ss
                 #uu))))
 
@@ -28,8 +27,7 @@
            (≡ (.get-number wspc) n)))
 
 (defmatch [workspace/nameᵒ workspace/nameo]
-  .get-name
-  identity)
+  .get-name)
 
 ;;
 ;; Windows
@@ -48,6 +46,27 @@
                   (.move-to-workspace w ws)
                   (succeed s)))))))
 
-(defmatch [application/nameᵒ application/nameo]
-  .get-application
+(defmatch [window/applicationᵒ window/applicationo]
+  .get-application)
+
+(defmatch [window/class-groupᵒ window/class-groupo]
+  .get-class-group)
+
+(defmatch [window/nameᵒ window/nameo]
   .get-name)
+
+(defmatch [window/group-leaderᵒ window/group-leadero]
+  .get-group-leader)
+
+(defmatch [window/xidᵒ window/xido]
+  .get-xid)
+
+;;
+;; Applications
+;;
+
+(defmatch [application/nameᵒ application/nameo]
+  .get-name)
+
+(defmatch [application/windowsᵒ application/windowso]
+  .get-windows)
