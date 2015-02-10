@@ -17,10 +17,14 @@
              [accessor (HySymbol (+ ".get_" x))]]
          `(defn-alias [~unicode-name ~ascii-name] [~g!o ~g!r]
             (project [~g!o]
-                     (if (.match (re.compile ~g!r)
-                                 (~accessor ~g!o))
-                       #ss
-                       #uu))))
+                     (fn [~g!s]
+                       (let [[~g!rr (reify ~g!r ~g!s)]]
+                         (if (lvar? ~g!rr)
+                           ((== (~accessor ~g!o) ~g!r) ~g!s)
+                           (if (.match (re.compile ~g!r)
+                                       (~accessor ~g!o))
+                             #ss
+                             #uu)))))))
        [x properties]))))
 
 (defmacro/g! defaccessors [prefix properties]
