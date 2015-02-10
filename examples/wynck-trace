@@ -1,0 +1,13 @@
+#! /usr/bin/env hy
+;; -*- mode: hy -*-
+(import [wynck.dsl [*]]
+        [wynck.app [*]])
+(require wynck.app)
+(require wynck.dsl)
+
+(wynck nil
+       (window/nameᵒ window ?window-name)
+       (window/applicationᵒ window ?application)
+       (application/nameᵒ ?application ?application-name)
+       (trace [?application-name ?window-name]
+              (print ?application-name "=>" ?window-name)))
