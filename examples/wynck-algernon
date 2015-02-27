@@ -38,7 +38,7 @@
  (=> "Rhythmbox" 2)
  (=> "Pidgin" 3)
 
- (else
+ (always
   (window/applicationᵒ window ?application)
   (trace [window ?application]
          (print (.get-name ?application) "=>" (.get-name window)))
