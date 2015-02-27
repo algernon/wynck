@@ -17,23 +17,35 @@
 (import [gtk.gdk [display-get-default]]
         [wnck]
         [gobject]
-        [wynck.dsl [*]]
-        [adderall.dsl [*]])
-(require adderall.dsl)
+        [wynck.unify])
 
 (defmacro/g! wynck [user-data &rest rules]
   `(do
     (for [~g!n (range (.get-n-screens (display-get-default)))]
-        (let [[~g!scr (wnck.screen-get ~g!n)]]
-          (.connect ~g!scr "window-opened"
-                    (fn [~g!s ~g!w ~g!d]
-                      (run* [screen window data]
-                            (== screen ~g!s)
-                            (== window ~g!w)
-                            (== data ~g!d)
-                            (prep
-                             ~@rules)))
-                    ~user-data)))
+      (let [[~g!scr (wnck.screen-get ~g!n)]]
+        (.force-update ~g!scr)
+        (for [cw (.get-windows ~g!scr)]
+          (setv cw.unify wynck.unify.window))
+        (for [cws (.get-workspaces ~g!scr)]
+          (setv cws.unify wynck.unify.workspace))
+        (for [app (set (list-comp (.get-application w)
+                                  [w (.get-windows
+                                      (wnck.screen_get_default))]))]
+          (setv app.unify wynck.unify.application))
+        (.connect ~g!scr "window-opened"
+                  (fn [screen window data]
+                    (setv window.unify wynck.unify.window)
+                    (let [[ws (.get-workspace window)]
+                          [app (.get-application window)]]
+                      (setv ws.unify wynck.unify.workspace)
+                      (setv app.unify wynck.unify.application))
+                    (run* [q]
+                          (prep
+                           ~@rules)
+                          (≡ q true))
+                    true)
+                  ~user-data)
+        nil))
     (.run (gobject.MainLoop))))
 
 (defmacro trace [vars &rest rules]

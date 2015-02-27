@@ -22,8 +22,6 @@
 (require wynck.dsl)
 
 (wynck nil
-       (window/nameᵒ window ?window-name)
-       (window/applicationᵒ window ?application)
-       (application/nameᵒ ?application ?application-name)
-       (trace [?application-name ?window-name]
-              (print ?application-name "=>" ?window-name)))
+       (window/applicationᵒ window ?app)
+       (trace [window ?app]
+              (print (.get-name ?app) "=>" (.get-name window))))

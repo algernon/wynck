@@ -14,24 +14,21 @@
 ;; You should have received a copy of the GNU Lesser General Public
 ;; License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(import [adderall.dsl [*]]
-        [wnck]
-        [wynck.tools])
-;; (require adderall.dsl)
-(require wynck.unify)
+(import [wnck]
+        [adderall.internal [substitute]])
 
-(defn-alias [workspaceᵒ workspaceo] [w]
-  (memberᵒ w (.get-workspaces (wnck.screen-get-default))))
+;;
+;; Windows
+;;
 
-(defn-alias [windowᵒ windowo] [w]
-  (memberᵒ w (.get-windows (wnck.screen-get-default))))
+(defn window/ensure [w what s]
+  (when s
+    (setv w (substitute w s))
+    (setv what (substitute what s)))
 
-(defaccessors window [application workspace class-group group-leader])
-
-(defn-alias [window/ensureᵍ window/ensureg] [w where]
-  (fn [s]
-    (yield (wynck.tools.window/ensure w where s))))
-
-(defn-alias [applicationᵒ applicationo] [a]
-  (memberᵒ a (set (list-comp (.get-application w)
-                             [w (.get-windows (wnck.screen_get_default))]))))
+  (cond
+   [(nil? s) s]
+   [(instance? wnck.Workspace what)
+    (do
+     (.move-to-workspace w what)
+     s)]))

@@ -20,18 +20,21 @@
 ;; This is the layout I use...
 ;;
 
-(import [wynck.dsl [*]]
-        [wynck.app [*]])
+(import [adderall.dsl [*]]
+        [wynck.dsl [*]]
+        [wynck.app [*]]
+        [re])
 (require wynck.app)
-(require wynck.dsl)
+(require adderall.dsl)
 
 (defn-alias [a/appᵒ] [w r]
   (prep
    (window/applicationᵒ w ?app)
-   (application/nameᵒ ?app ?app-name)
-   (== ?app-name r)))
+   (≡ ?app (re.compile r))))
 
 (wynck nil
        (condᵉ
-        [(a/appᵒ window "evolution")
-         (window/positionᵒ window [0 0])]))
+        [(a/appᵒ window "xterm")
+         (workspaceᵒ ?ws)
+         (≡ ?ws 1)
+         (window/ensureᵍ window ?ws)]))
