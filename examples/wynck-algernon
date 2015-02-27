@@ -31,6 +31,5 @@
 (wynck nil
        (condᵉ
         [(≃ window "xterm")
-         (workspaceᵒ ?ws)
-         (≡ ?ws 1)
-         (window/ensureᵍ window ?ws)]))
+         (≡ ?workspace 1)
+         (window/ensureᵍ window ?workspace)]))

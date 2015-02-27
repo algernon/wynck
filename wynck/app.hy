@@ -41,6 +41,8 @@
                       (setv app.unify wynck.unify.application))
                     (run* [q]
                           (prep
+                           (workspaceᵒ ?workspace)
+                           (applicationᵒ ?application)
                            ~@rules)
                           (≡ q true))
                     true)
