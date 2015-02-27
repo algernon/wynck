@@ -1,5 +1,3 @@
-#! /usr/bin/env hy
-;; -*- mode: hy -*-
 ;; wynck – wnck on adderall
 ;; Copyright (C) 2015  Gergely Nagy <algernon@madhouse-project.org>
 ;;
@@ -16,21 +14,13 @@
 ;; You should have received a copy of the GNU Lesser General Public
 ;; License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-;;
-;; This is the layout I use...
-;;
-
-(import [adderall.dsl [*]]
-        [wynck.dsl [*]]
-        [wynck.app [*]]
-        [wynck.sugar [*]]
-        [re])
-(require wynck.app)
+(import [wynck.dsl [*]]
+        [adderall.dsl [*]])
 (require adderall.dsl)
 
-(wynck nil
-       (condᵉ
-        [(≃ window "xterm")
-         (workspaceᵒ ?ws)
-         (≡ ?ws 1)
-         (window/ensureᵍ window ?ws)]))
+(defn-alias [≃ =~] [u v]
+  (prep
+   (condᵉ
+    [(window/applicationᵒ u ?app)
+     (≡ ?app v)]
+    (else (≡ u v)))))
