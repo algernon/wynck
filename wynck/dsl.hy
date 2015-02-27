@@ -28,9 +28,9 @@
 
 (defaccessors window [application workspace class-group group-leader])
 
-(defn-alias [window/ensureᵍ window/ensureg] [w what]
+(defn-alias [window/ensureᵍ window/ensureg] [w what &rest options]
   (fn [s]
-    (yield (wynck.tools.window/ensure w what s))))
+    (yield (wynck.tools.window/ensure w what s options))))
 
 (defn-alias [applicationᵒ applicationo] [a]
   (memberᵒ a (set (list-comp (.get-application w)
