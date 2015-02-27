@@ -36,6 +36,8 @@
          (cond
           [(= o '+)
            `(window/ensureᵍ window :maximized)]
+          [(= o '-)
+           `(window/ensureᵍ window :unmaximized)]
           [(integer? o)
            `(≡ ?workspace ~(HyInteger (dec o)))]))
        options))
