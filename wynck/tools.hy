@@ -21,7 +21,7 @@
 ;; Windows
 ;;
 
-(defn window/ensure [w what s &rest options]
+(defn window/ensure [w what s options]
   (when s
     (setv w (substitute w s))
     (setv what (substitute what s)))
