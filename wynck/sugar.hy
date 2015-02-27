@@ -51,7 +51,7 @@
   `(wynck nil
           (condᵉ
            ~@(map (fn [s]
-                    (if (= (first s) 'always)
+                    (if (= (first s) 'else)
                       s
                       `~(--rewrite-simple-- s)))
                   rules))

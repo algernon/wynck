@@ -40,7 +40,7 @@
 
  (=> "xterm" 1 +)
 
- (always
+ (else
   (window/applicationᵒ window ?application)
   (trace [window ?application]
          (print (.get-name ?application) "=>" (.get-name window)))
