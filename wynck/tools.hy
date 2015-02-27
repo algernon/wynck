@@ -31,4 +31,18 @@
    [(instance? wnck.Workspace what)
     (do
      (.move-to-workspace w what)
+     s)]
+   [(= what :maximized)
+    (do
+     (if (or (empty? options)
+             (first options))
+       (.maximize w)
+       (.unmaximize w))
+     s)]
+   [(= what :unmaximized)
+    (do
+     (if (or (empty? options)
+             (first options))
+       (.unmaximize w)
+       (.maximize w))
      s)]))

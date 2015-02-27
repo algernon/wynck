@@ -31,12 +31,21 @@
     `~(HyString (name sym))
     `(re.compile ~sym)))
 
+(defn --rewrite-options-- [options]
+  (map (fn [o]
+         (cond
+          [(= o '+)
+           `(window/ensureᵍ window :maximized)]
+          [(integer? o)
+           `(≡ ?workspace ~(HyInteger (dec o)))]))
+       options))
+
 (defn --rewrite-simple-- [s]
-  (let [[[op what val] s]]
+  (let [[[op what] (slice s 0 2)]]
     (cond
      [(= op '=>)
       `[(≃ window ~(--rewrite-simple-symbol-- what))
-        (≡ ?workspace ~(HyInteger (dec val)))]])))
+        ~@(--rewrite-options-- (slice s 2))]])))
 
 (defmacro wynck/simple [&rest rules]
   `(wynck nil

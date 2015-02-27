@@ -38,6 +38,8 @@
  (=> "Rhythmbox" 2)
  (=> "Pidgin" 3)
 
+ (=> "xterm" 1 +)
+
  (always
   (window/applicationᵒ window ?application)
   (trace [window ?application]
