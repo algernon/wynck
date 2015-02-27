@@ -26,31 +26,20 @@
         [wynck.sugar [*]]
         [re])
 (require wynck.app)
+(require wynck.sugar)
 (require adderall.dsl)
 
 (defreader r [s] `(re.compile ~s))
 
-(wynck nil
-       (condᵉ
-        [(≃ window "Rhythmbox")
-         (≡ ?workspace 1)]
+(wynck/simple
+ (=> "emacs" 1)
+ (=> "ROXTerm" 1)
+ (=> #r".*Chromium" 4)
+ (=> "Rhythmbox" 2)
+ (=> "Pidgin" 3)
 
-        [(≃ window "emacs")
-         (≡ ?workspace 0)]
-
-        [(≃ window "ROXTerm")
-         (≡ ?workspace 0)]
-
-        [(≃ window "Pidgin")
-         (≡ ?workspace 2)]
-
-        [(≃ window #r".*Chromium")
-         (≡ ?workspace 3)]
-
-        (else
-         (window/applicationᵒ window ?application)
-         (trace [window ?application]
-                (print (.get-name ?application) "=>" (.get-name window)))
-         (window/workspaceᵒ window ?workspace)))
-
-       (window/ensureᵍ window ?workspace))
+ (else
+  (window/applicationᵒ window ?application)
+  (trace [window ?application]
+         (print (.get-name ?application) "=>" (.get-name window)))
+  (window/workspaceᵒ window ?workspace)))

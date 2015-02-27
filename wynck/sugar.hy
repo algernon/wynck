@@ -15,7 +15,8 @@
 ;; License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (import [wynck.dsl [*]]
-        [adderall.dsl [*]])
+        [adderall.dsl [*]]
+        [re])
 (require adderall.dsl)
 
 (defn-alias [≃ =~] [u v]
@@ -24,3 +25,26 @@
     [(window/applicationᵒ u ?app)
      (≡ ?app v)]
     (else (≡ u v)))))
+
+(defn --rewrite-simple-symbol-- [sym]
+  (if (keyword? sym)
+    `~(HyString (name sym))
+    `(re.compile ~sym)))
+
+(defn --rewrite-simple-- [s]
+  (let [[[op what val] s]]
+    (cond
+     [(= op '=>)
+      `[(≃ window ~(--rewrite-simple-symbol-- what))
+        (≡ ?workspace ~(HyInteger (dec val)))]])))
+
+(defmacro wynck/simple [&rest rules]
+  `(wynck nil
+          (condᵉ
+           ~@(map (fn [s]
+                    (if (= (first s) 'else)
+                      s
+                      `~(--rewrite-simple-- s)))
+                  rules))
+
+          (window/ensureᵍ window ?workspace)))
