@@ -34,7 +34,7 @@
 (wynck/simple
  (=> "emacs" 1)
  (=> "ROXTerm" 1)
- (=> #r".*Chromium" 4)
+ (=> #r".*Chromium" 1)
  (=> "Rhythmbox" 2)
  (=> "Pidgin" 3)
 
