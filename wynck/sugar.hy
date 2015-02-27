@@ -43,7 +43,7 @@
           (condᵉ
            ~@(map (fn [s]
                     (if (= (first s) 'always)
-                      s
+                      `(else ~@(rest s))
                       `~(--rewrite-simple-- s)))
                   rules))
 
