@@ -29,18 +29,16 @@
 (require wynck.sugar)
 (require adderall.dsl)
 
-(defreader r [s] `(re.compile ~s))
-
 (wynck/simple
- (=> "emacs" 1)
- (=> "ROXTerm" 1)
- (=> #r".*Chromium" 1)
- (=> "Rhythmbox" 2)
- (=> "Pidgin" 3)
+ (=> :emacs 1)
+ (=> :ROXTerm 1)
+ (=> ".*Chromium" 1)
+ (=> :Rhythmbox 2)
+ (=> :Pidgin 3)
 
- (=> "xterm" 1 +)
+ (=> :xterm 1 +)
 
- (=> #r".*Evolution" 1 [0 0] +)
+ (=> ".*Evolution" 1 [0 0] +)
  (=> "Compose Message" 1 [1920 0] -)
 
  (else
