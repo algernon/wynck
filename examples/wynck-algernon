@@ -40,6 +40,9 @@
 
  (=> "xterm" 1 +)
 
+ (=> #r".*Evolution" 1 [0 0] +)
+ (=> "Compose Message" 1 [1920 0] -)
+
  (else
   (window/applicationᵒ window ?application)
   (trace [window ?application]

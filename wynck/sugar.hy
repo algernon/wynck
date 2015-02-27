@@ -39,7 +39,9 @@
           [(= o '-)
            `(window/ensureᵍ window :unmaximized)]
           [(integer? o)
-           `(≡ ?workspace ~(HyInteger (dec o)))]))
+           `(≡ ?workspace ~(HyInteger (dec o)))]
+          [(coll? o)
+           `(window/ensureᵍ window :position ~(first o) ~(second o))]))
        options))
 
 (defn --rewrite-simple-- [s]

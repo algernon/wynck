@@ -45,4 +45,12 @@
              (first options))
        (.unmaximize w)
        (.maximize w))
-     s)]))
+     s)]
+   [(= what :position)
+    (let [[[x y] options]]
+      (.set-geometry w
+                     wnck.WINDOW_GRAVITY_STATIC
+                     (| wnck.WINDOW_CHANGE_X
+                        wnck.WINDOW_CHANGE_Y)
+                     x y 0 0)
+      s)]))
