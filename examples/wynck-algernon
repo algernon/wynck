@@ -30,19 +30,33 @@
 (require adderall.dsl)
 
 (wynck/simple
- (=> :emacs 1)
- (=> :ROXTerm 1)
- (=> ".*Chromium" 1)
- (=> :Rhythmbox 2)
- (=> :Pidgin 3)
+ (?
+  (=> :emacs
+      (workspace 0))
+  (=> :ROXTerm
+      (workspace 0))
+  (=> ".*Chromium"
+      (workspace 0))
+  (=> :Rhythmbox
+      (workspace 1))
+  (=> :Pidgin
+      (workspace 2))
+  (=> :xterm
+      (workspace 0)
+      (maximized))
 
- (=> :xterm 1 +)
+  (=> :evolution
+      (workspace 0)
+      (?
+       (=> ".*Evolution"
+           (maximized)
+           (position 0 0))
+       (=> "Compose Message"
+           (unmaximized)
+           (position 1920 0))))
 
- (=> ".*Evolution" 1 [0 0] +)
- (=> "Compose Message" 1 [1920 0] -)
-
- (else
-  (window/applicationᵒ window ?application)
-  (trace [window ?application]
-         (print (.get-name ?application) "=>" (.get-name window)))
-  (window/workspaceᵒ window ?workspace)))
+  (else
+   (window/applicationᵒ window ?application)
+   (trace [window ?application]
+          (print (.get-name ?application) "=>" (.get-name window)))
+   (window/workspaceᵒ window ?workspace))))

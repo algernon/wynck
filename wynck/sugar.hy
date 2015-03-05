@@ -31,33 +31,28 @@
     `~(HyString (name sym))
     `(re.compile ~sym)))
 
-(defn --rewrite-options-- [options]
-  (map (fn [o]
-         (cond
-          [(= o '+)
-           `(window/ensureᵍ window :maximized)]
-          [(= o '-)
-           `(window/ensureᵍ window :unmaximized)]
-          [(integer? o)
-           `(≡ ?workspace ~(HyInteger (dec o)))]
-          [(coll? o)
-           `(window/ensureᵍ window :position ~(first o) ~(second o))]))
-       options))
+(defmacro => [window &rest rules]
+  `[(≃ window ~(--rewrite-simple-symbol-- window))
+    ~@rules])
 
-(defn --rewrite-simple-- [s]
-  (let [[[op what] (slice s 0 2)]]
-    (cond
-     [(= op '=>)
-      `[(≃ window ~(--rewrite-simple-symbol-- what))
-        ~@(--rewrite-options-- (slice s 2))]])))
+(defmacro ? [&rest rules]
+  `(condᵉ
+    ~@rules))
+
+(defmacro maximized []
+  `(window/ensureᵍ window :maximized))
+
+(defmacro unmaximized []
+  `(window/ensureᵍ window :unmaximized))
+
+(defmacro workspace [ws]
+  `(≡ ?workspace ~ws))
+
+(defmacro position [x y]
+  `(window/ensureᵍ window :position ~x ~y))
 
 (defmacro wynck/simple [&rest rules]
   `(wynck nil
-          (condᵉ
-           ~@(map (fn [s]
-                    (if (= (first s) 'else)
-                      s
-                      `~(--rewrite-simple-- s)))
-                  rules))
+          ~@rules
 
           (window/ensureᵍ window ?workspace)))
