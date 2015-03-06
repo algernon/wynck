@@ -15,6 +15,7 @@
 ;; License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (import [wnck]
+        [gtk.gdk]
         [adderall.internal [substitute]])
 
 ;;
@@ -57,6 +58,10 @@
                 (< x width))
          (setv x (+ x width)))
        (window/ensure w :position s [x y])))]
+   [(= what :activate)
+    (let [[now (gtk.gdk.x11_get_server_time
+                (gtk.gdk.get_default_root_window))]]
+      (.activate w now))]
    [(= what :position)
     (let [[[x y] options]]
       (.set-geometry w

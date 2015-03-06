@@ -54,8 +54,14 @@
 (defmacro vscreen [place]
   `(window/ensureᵍ window :vscreen ~place))
 
+(defmacro activate []
+  `(≡ ?activate true))
+
 (defmacro wynck/simple [&rest rules]
   `(wynck nil
           ~@rules
 
-          (window/ensureᵍ window ?workspace)))
+          (window/ensureᵍ window ?workspace)
+          (condᵉ
+           [(≡ ?activate true)
+            (window/ensureᵍ window :activate)])))
