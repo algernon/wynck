@@ -22,18 +22,19 @@
 (defmacro/g! wynck [user-data &rest rules]
   `(do
     (for [~g!n (range (.get-n-screens (display-get-default)))]
-      (let [[~g!scr (wnck.screen-get ~g!n)]]
-        (.force-update ~g!scr)
-        (for [cw (.get-windows ~g!scr)]
+      (let [[screen (wnck.screen-get ~g!n)]]
+        (.force-update screen)
+        (setv screen.unify wynck.unify.screen)
+        (for [cw (.get-windows screen)]
           (setv cw.unify wynck.unify.window))
-        (for [cws (.get-workspaces ~g!scr)]
+        (for [cws (.get-workspaces screen)]
           (setv cws.unify wynck.unify.workspace))
         (for [app (set (list-comp (.get-application w)
-                                  [w (.get-windows
-                                      (wnck.screen_get_default))]))]
+                                  [w (.get-windows screen)]))]
           (setv app.unify wynck.unify.application))
-        (.connect ~g!scr "window-opened"
+        (.connect screen "window-opened"
                   (fn [screen window data]
+                    (setv screen.unify wynck.unify.screen)
                     (setv window.unify wynck.unify.window)
                     (let [[ws (.get-workspace window)]
                           [app (.get-application window)]]

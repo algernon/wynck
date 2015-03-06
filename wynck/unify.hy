@@ -132,3 +132,24 @@
     (when (and (instance? wnck.Application v)
                (.match u (.get-name v)))
       (, u (.get-name v) s))]))
+
+(defn screen [u v s]
+  (when s
+    (setv u (substitute u s))
+    (setv v (substitute v s)))
+
+  (cond
+   [(lvar? u)
+    (if (lvar? v)
+      (extend-unchecked u v s)
+      (extend u v s))]
+   [(lvar? v)
+    (extend v u s)]
+   [(integer? v)
+    (when (and (instance? wnck.Screen u)
+               (= (.get-number u) v))
+      (, v (.get-number u) s))]
+   [(integer? u)
+    (when (and (instance? wnck.Screen v)
+               (= (.get-number v) u))
+      (, u (.get-number v) s))]))

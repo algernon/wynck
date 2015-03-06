@@ -16,9 +16,14 @@
 
 (import [adderall.dsl [*]]
         [wnck]
-        [wynck.tools])
+        [wynck.tools]
+        [gtk.gdk [display-get-default]])
 ;; (require adderall.dsl)
 (require wynck.unify)
+
+(defn-alias [screenᵒ screeno] [s]
+  (memberᵒ s (list-comp (wnck.screen-get x)
+                        [x (range (.get-n-screens (display-get-default)))])))
 
 (defn-alias [workspaceᵒ workspaceo] [w]
   (memberᵒ w (.get-workspaces (wnck.screen-get-default))))
@@ -26,7 +31,8 @@
 (defn-alias [windowᵒ windowo] [w]
   (memberᵒ w (.get-windows (wnck.screen-get-default))))
 
-(defaccessors window [application workspace class-group group-leader])
+(defaccessors window [application workspace class-group group-leader
+                      screen])
 
 (defn-alias [window/ensureᵍ window/ensureg] [w what &rest options]
   (fn [s]
