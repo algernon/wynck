@@ -50,10 +50,10 @@
       (?
        (=> ".*Evolution"
            (maximized)
-           (position 0 0))
+           (vscreen :left))
        (=> "Compose Message"
            (unmaximized)
-           (position 1920 0))))
+           (vscreen :right))))
 
   (else
    (window/applicationᵒ window ?application)

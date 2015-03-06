@@ -46,6 +46,17 @@
        (.unmaximize w)
        (.maximize w))
      s)]
+   [(= what :vscreen)
+    (do
+     (let [[[x y a b] (.get-geometry w)]
+           [width (int (/ (-> w .get-workspace .get-width) 2))]]
+       (if (and (= (first options) :left)
+                (> x width))
+         (setv x (- x width)))
+       (if (and (= (first options) :right)
+                (< x width))
+         (setv x (+ x width)))
+       (window/ensure w :position s [x y])))]
    [(= what :position)
     (let [[[x y] options]]
       (.set-geometry w
