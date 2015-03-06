@@ -32,11 +32,15 @@
 (wynck/simple
  (?
   (=> :emacs
-      (workspace 0))
+      (workspace 0)
+      (vscreen :right)
+      (activate))
   (=> :ROXTerm
-      (workspace 0))
+      (workspace 0)
+      (vscreen :right))
   (=> ".*Chromium"
-      (workspace 0))
+      (workspace 0)
+      (vscreen :right))
   (=> :Rhythmbox
       (workspace 1))
   (=> :Pidgin
@@ -53,7 +57,8 @@
            (vscreen :left))
        (=> "Compose Message"
            (unmaximized)
-           (vscreen :right))))
+           (vscreen :right)
+           (activate))))
 
   (else
    (window/applicationᵒ window ?application)
