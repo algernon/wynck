@@ -16,10 +16,10 @@
 ;; You should have received a copy of the GNU Lesser General Public
 ;; License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(import [adderall.dsl [*]]
-        [wynck.dsl [*]])
-(require adderall.dsl)
+(import [wynck.dsl [*]]
+        [adderall.dsl [*]])
 (require wynck.dsl)
+(require adderall.dsl)
 
 (wynck nil
        (window/applicationᵒ window ?app)

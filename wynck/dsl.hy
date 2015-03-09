@@ -14,13 +14,14 @@
 ;; You should have received a copy of the GNU Lesser General Public
 ;; License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(import [adderall.dsl [*]]
-        [wnck]
+(import [wnck]
         [wynck.internal.tools]
         [gobject]
         [wynck.internal.unify]
-        [gtk.gdk [display-get-default]])
+        [gtk.gdk [display-get-default]]
+        [adderall.dsl [*]])
 (require wynck.internal.unify)
+(require adderall.dsl)
 
 (defn-alias [screenᵒ screeno] [s]
   (memberᵒ s (list-comp (wnck.screen-get x)

@@ -18,7 +18,6 @@
         [re]
         [adderall.dsl [*]]
         [adderall.internal [extend extend-unchecked substitute]])
-(require adderall.dsl)
 
 (def --re-type-- (type (re.compile "")))
 

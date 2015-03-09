@@ -20,9 +20,9 @@
 ;; This is the layout I use...
 ;;
 
-(import [adderall.dsl [*]]
-        [wynck.dsl [*]]
-        [re])
+(import [wynck.dsl [*]]
+        [re]
+        [adderall.dsl [*]])
 (require wynck.dsl)
 (require adderall.dsl)
 
