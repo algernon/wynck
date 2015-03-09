@@ -55,7 +55,7 @@
 
 ;;;
 
-(defmacro/g! wynck [user-data &rest rules]
+(defmacro/g! wynck [event user-data &rest rules]
   `(do
     (for [~g!n (range (.get-n-screens (display-get-default)))]
       (let [[screen (wnck.screen-get ~g!n)]]
@@ -68,7 +68,8 @@
         (for [app (set (list-comp (.get-application w)
                                   [w (.get-windows screen)]))]
           (setv app.unify wynck.internal.unify.application))
-        (.connect screen "window-opened"
+        (.connect screen (-> (or ~event "window-opened")
+                             name)
                   (fn [screen window data]
                     (setv screen.unify wynck.internal.unify.screen)
                     (setv window.unify wynck.internal.unify.window)
@@ -128,7 +129,7 @@
   `(≡ ?activate true))
 
 (defmacro wynck/simple [&rest rules]
-  `(wynck nil
+  `(wynck :window-opened nil
           ~@rules
 
           (window/ensureᵍ window ?workspace)

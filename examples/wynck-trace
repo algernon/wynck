@@ -21,7 +21,7 @@
 (require wynck.dsl)
 (require adderall.dsl)
 
-(wynck nil
+(wynck :window-opened nil
        (window/applicationᵒ window ?app)
        (trace [window ?app]
               (print (.get-name ?app) "=>" (.get-name window))))
