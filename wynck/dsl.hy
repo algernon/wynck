@@ -16,9 +16,11 @@
 
 (import [adderall.dsl [*]]
         [wnck]
-        [wynck.tools]
+        [wynck.internal.tools]
+        [gobject]
+        [wynck.internal.unify]
         [gtk.gdk [display-get-default]])
-(require wynck.unify)
+(require wynck.internal.unify)
 
 (defn-alias [screenᵒ screeno] [s]
   (memberᵒ s (list-comp (wnck.screen-get x)
@@ -35,8 +37,100 @@
 
 (defn-alias [window/ensureᵍ window/ensureg] [w what &rest options]
   (fn [s]
-    (yield (wynck.tools.window/ensure w what s options))))
+    (yield (wynck.internal.tools.window/ensure w what s options))))
 
 (defn-alias [applicationᵒ applicationo] [a]
   (memberᵒ a (set (list-comp (.get-application w)
                              [w (.get-windows (wnck.screen_get_default))]))))
+
+
+;;;
+
+(defmacro trace [vars &rest rules]
+  `(project ~vars
+            (do
+             ~@rules
+             #ss)))
+
+;;;
+
+(defmacro/g! wynck [user-data &rest rules]
+  `(do
+    (for [~g!n (range (.get-n-screens (display-get-default)))]
+      (let [[screen (wnck.screen-get ~g!n)]]
+        (.force-update screen)
+        (setv screen.unify wynck.internal.unify.screen)
+        (for [cw (.get-windows screen)]
+          (setv cw.unify wynck.internal.unify.window))
+        (for [cws (.get-workspaces screen)]
+          (setv cws.unify wynck.internal.unify.workspace))
+        (for [app (set (list-comp (.get-application w)
+                                  [w (.get-windows screen)]))]
+          (setv app.unify wynck.internal.unify.application))
+        (.connect screen "window-opened"
+                  (fn [screen window data]
+                    (setv screen.unify wynck.internal.unify.screen)
+                    (setv window.unify wynck.internal.unify.window)
+                    (let [[ws (.get-workspace window)]
+                          [app (.get-application window)]]
+                      (setv ws.unify wynck.internal.unify.workspace)
+                      (setv app.unify wynck.internal.unify.application))
+                    (run* [q]
+                          (prep
+                           (workspaceᵒ ?workspace)
+                           (applicationᵒ ?application)
+                           ~@rules)
+                          (≡ q true))
+                    true)
+                  ~user-data)
+        nil))
+    (.run (gobject.MainLoop))))
+
+;;
+
+(defn-alias [≃ =~] [u v]
+  (prep
+   (condᵉ
+    [(window/applicationᵒ u ?app)
+     (≡ ?app v)]
+    (else (≡ u v)))))
+
+(defn --rewrite-simple-symbol-- [sym]
+  (if (keyword? sym)
+    `~(HyString (name sym))
+    `(re.compile ~sym)))
+
+(defmacro => [window &rest rules]
+  `[(≃ window ~(--rewrite-simple-symbol-- window))
+    ~@rules])
+
+(defmacro ? [&rest rules]
+  `(condᵉ
+    ~@rules))
+
+(defmacro maximized []
+  `(window/ensureᵍ window :maximized))
+
+(defmacro unmaximized []
+  `(window/ensureᵍ window :unmaximized))
+
+(defmacro workspace [ws]
+  `(≡ ?workspace ~ws))
+
+(defmacro position [x y]
+  `(window/ensureᵍ window :position ~x ~y))
+
+(defmacro vscreen [place]
+  `(window/ensureᵍ window :vscreen ~place))
+
+(defmacro activate []
+  `(≡ ?activate true))
+
+(defmacro wynck/simple [&rest rules]
+  `(wynck nil
+          ~@rules
+
+          (window/ensureᵍ window ?workspace)
+          (condᵉ
+           [(≡ ?activate true)
+            (window/ensureᵍ window :activate)])))

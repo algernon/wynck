@@ -22,11 +22,8 @@
 
 (import [adderall.dsl [*]]
         [wynck.dsl [*]]
-        [wynck.app [*]]
-        [wynck.sugar [*]]
         [re])
-(require wynck.app)
-(require wynck.sugar)
+(require wynck.dsl)
 (require adderall.dsl)
 
 (wynck/simple
