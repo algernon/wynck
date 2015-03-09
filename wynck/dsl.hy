@@ -18,7 +18,6 @@
         [wnck]
         [wynck.tools]
         [gtk.gdk [display-get-default]])
-;; (require adderall.dsl)
 (require wynck.unify)
 
 (defn-alias [screenᵒ screeno] [s]
